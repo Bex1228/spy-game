@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>ШПИОН — презентация игры</title>
+<style>
+  @font-face { font-family: "Unbounded"; font-weight: 200 900; font-display: block;
+    src: url("../../public/fonts/unbounded-cyrillic.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Unbounded"; font-weight: 200 900; font-display: block;
+    src: url("../../public/fonts/unbounded-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Manrope"; font-weight: 200 800; font-display: block;
+    src: url("../../public/fonts/manrope-cyrillic.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Manrope"; font-weight: 200 800; font-display: block;
+    src: url("../../public/fonts/manrope-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+  :root {
+    --bg: #08080a; --surface: #111116; --surface-2: #16161d; --line: rgba(255,255,255,.08);
+    --ivory: #f5efe4; --ivory-dim: #cfc6b6; --muted: #9c9cab; --muted-2: #6c6c7b;
+    --red: #e6323f; --red-300: #ff7a84; --red-400: #ff4b58; --red-900: #2e0a0e;
+  }
+  @page { size: 1280px 720px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #000; }
+  body { font-family: "Manrope", system-ui, sans-serif; color: var(--ivory); -webkit-font-smoothing: antialiased; }
+
+  .slide {
+    position: relative; width: 1280px; height: 720px; overflow: hidden;
+    background: var(--bg); padding: 72px 88px; break-after: page; page-break-after: always;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .glow { position: absolute; inset: 0; pointer-events: none; }
+  .glow-tr { background: radial-gradient(55% 55% at 82% 8%, rgba(230,50,63,.26), transparent 70%); }
+  .glow-tl { background: radial-gradient(55% 55% at 12% 10%, rgba(230,50,63,.22), transparent 70%); }
+  .glow-c  { background: radial-gradient(60% 55% at 50% 0%, rgba(230,50,63,.24), transparent 70%); }
+  .glow-ivory { background: radial-gradient(50% 50% at 15% 15%, rgba(245,239,228,.09), transparent 70%); }
+  .glow-b { background: radial-gradient(70% 50% at 50% 110%, rgba(230,50,63,.22), transparent 70%); }
+  .vignette { position:absolute; inset:0; background: radial-gradient(90% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); pointer-events:none; }
+
+  .foot { position: absolute; left: 88px; bottom: 40px; display: flex; gap: 14px; align-items: center;
+    font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted-2); font-weight: 700; }
+  .foot .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+
+  .eyebrow { font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--red-300); font-weight: 800; }
+  .eyebrow.muted { color: var(--muted); }
+  h1, h2, h3 { font-family: "Unbounded", "Manrope", sans-serif; margin: 0; }
+  h1 { font-size: 150px; font-weight: 800; letter-spacing: -.03em; line-height: .92; text-transform: uppercase; }
+  h2 { font-size: 46px; font-weight: 700; letter-spacing: -.02em; line-height: 1.06; }
+  h3 { font-size: 22px; font-weight: 700; line-height: 1.2; }
+  p { margin: 0; }
+  .lead { font-size: 21px; line-height: 1.5; color: var(--muted); font-weight: 500; }
+  .lead b { color: var(--ivory); font-weight: 700; }
+  .accent { color: var(--red-400); }
+  .ivory { color: var(--ivory); }
+
+  .row { display: flex; align-items: center; gap: 56px; height: 100%; position: relative; }
+  .col { flex: 1; min-width: 0; }
+  .phones { display: flex; gap: 28px; align-items: flex-end; justify-content: center; }
+  .phone { width: 250px; aspect-ratio: 390 / 844; border-radius: 40px; border: 7px solid #1a1a20; background: #000;
+    overflow: hidden; box-shadow: 0 50px 90px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.05); flex: none; }
+  .phone img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .phone.sm { width: 208px; }
+  .phone.lg { width: 262px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 26px 28px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
+  .card.red { background: linear-gradient(180deg, #b9222d, #8a161f 60%, #2e0a0e); border-color: rgba(255,75,88,.4); color: #fff; }
+  .card.ivory { background: var(--ivory); color: #0c0c10; border-color: transparent; }
+
+  .steps { display: flex; flex-direction: column; gap: 14px; }
+  .step { display: flex; align-items: center; gap: 20px; }
+  .num { width: 44px; height: 44px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center;
+    background: rgba(230,50,63,.14); color: var(--red-300); font-family: "Unbounded"; font-weight: 700; font-size: 15px;
+    border: 1px solid rgba(230,50,63,.3); }
+  .step p { font-size: 22px; font-weight: 600; color: var(--ivory); }
+
+  .chips { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .chip { padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2);
+    font-family: "Unbounded"; font-weight: 500; font-size: 18px; color: var(--ivory); white-space: nowrap; }
+  .arrow { color: var(--muted-2); font-size: 20px; }
+
+  .big-list { display: flex; flex-direction: column; gap: 10px; }
+  .big-list p { font-family: "Unbounded"; font-weight: 700; font-size: 34px; line-height: 1.15; letter-spacing: -.01em; }
+
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .feat { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 20px 20px 18px; min-height: 128px;
+    display: flex; flex-direction: column; justify-content: space-between; }
+  .feat .v { font-family: "Unbounded"; font-weight: 700; font-size: 26px; letter-spacing: -.02em; color: var(--ivory); line-height: 1; }
+  .feat .v.red { color: var(--red-400); }
+  .feat .t { font-size: 14px; line-height: 1.35; color: var(--muted); font-weight: 600; margin-top: 12px; }
+
+  .mark { width: 64px; height: 64px; }
+</style>
+</head>
+<body>
+
+<!-- 1. ОБЛОЖКА -->
+<section class="slide">
+  <div class="glow glow-c"></div>
+  <div class="vignette"></div>
+  <div class="row">
+    <div class="col">
+      <svg class="mark" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+        <circle cx="40" cy="40" r="37" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
+        <circle cx="40" cy="40" r="29" stroke="rgba(255,255,255,.09)" stroke-width="1.5" stroke-dasharray="3 5"/>
+        <path d="M12 40C19 28 29 22 40 22s21 6 28 18c-7 12-17 18-28 18S19 52 12 40Z" stroke="#f5efe4" stroke-width="2.2" stroke-linejoin="round"/>
+        <circle cx="40" cy="40" r="10" fill="#e6323f"/><circle cx="43.5" cy="36.5" r="3" fill="rgba(255,255,255,.9)"/>
+        <path d="M40 4v8M40 68v8M4 40h8M68 40h8" stroke="#ff4b58" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h1 style="margin-top: 26px; text-shadow: 0 30px 80px rgba(0,0,0,.7);">Шпион</h1>
+      <p style="margin-top: 26px; font-family:'Unbounded'; font-weight: 500; font-size: 26px; color: var(--ivory-dim); letter-spacing: -.01em;">Найди шпиона. <span class="accent">Или стань им.</span></p>
+      <p class="lead" style="margin-top: 22px; max-width: 520px;">Игра для компании на одном телефоне. Один секрет, круг ассоциаций и кто-то, кто блефует.</p>
+    </div>
+    <div class="phones" style="flex: none; padding-right: 20px;">
+      <div class="phone lg"><img src="img/01-home.jpg" alt="Главный экран"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>Шпион · игра для компании</span></div>
+</section>
+
+<!-- 2. СУТЬ ИГРЫ -->
+<section class="slide">
+  <div class="glow glow-tl"></div>
+  <div class="row">
+    <div class="col">
+      <p class="eyebrow">Суть игры</p>
+      <div class="big-list" style="margin-top: 22px;">
+        <p>Один секрет.</p>
+        <p>Несколько игроков.</p>
+        <p class="accent">Один или несколько шпионов.</p>
+      </div>
+      <div style="display:flex; gap: 14px; margin-top: 40px; max-width: 560px;">
+        <div class="card ivory" style="flex:1; padding: 22px 24px;">
+          <p class="eyebrow" style="color:#8a161f;">Мирные</p>
+          <p style="font-family:'Unbounded'; font-weight:700; font-size: 20px; margin-top: 10px;">Знают секретное слово</p>
+        </div>
+        <div class="card red" style="flex:1; padding: 22px 24px;">
+          <p class="eyebrow" style="color: rgba(255,255,255,.75);">Шпионы</p>
+          <p style="font-family:'Unbounded'; font-weight:700; font-size: 20px; margin-top: 10px;">Слова не знают</p>
+        </div>
+      </div>
+    </div>
+    <div class="phones" style="flex:none;">
+      <div class="phone sm"><img src="img/07-card-civilian.jpg" alt="Карточка мирного"></div>
+      <div class="phone sm"><img src="img/08-card-spy.jpg" alt="Карточка шпиона"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>02 · Суть игры</span></div>
+</section>
+
+<!-- 3. КАК НАЧАТЬ -->
+<section class="slide">
+  <div class="glow glow-tr"></div>
+  <div class="row">
+    <div class="col">
+      <p class="eyebrow">Как начать</p>
+      <h2 style="margin-top: 16px;">Пять шагов до первого раунда</h2>
+      <div class="steps" style="margin-top: 34px;">
+        <div class="step"><span class="num">1</span><p>Выберите количество игроков</p></div>
+        <div class="step"><span class="num">2</span><p>Выберите количество шпионов</p></div>
+        <div class="step"><span class="num">3</span><p>Настройте время раунда</p></div>
+        <div class="step"><span class="num">4</span><p>Выберите категории слов</p></div>
+        <div class="step"><span class="num">5</span><p>Передавайте телефон по кругу и смотрите роль приватно</p></div>
+      </div>
+    </div>
+    <div class="phones" style="flex:none;">
+      <div class="phone sm"><img src="img/03-setup.jpg" alt="Настройка игры"></div>
+      <div class="phone sm"><img src="img/06-holding.jpg" alt="Удержание карточки"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>03 · Как начать</span></div>
+</section>
+
+<!-- 4. КАК ПРОХОДИТ РАУНД -->
+<section class="slide">
+  <div class="glow glow-tl"></div>
+  <div class="row">
+    <div class="col">
+      <p class="eyebrow">Как проходит раунд</p>
+      <h2 style="margin-top: 16px;">По кругу. По одному слову.</h2>
+      <p class="lead" style="margin-top: 18px; max-width: 600px;">После раздачи приложение само выбирает первого игрока. Дальше каждый по очереди называет <b>одну ассоциацию</b> к секретному слову.</p>
+      <div class="card" style="margin-top: 30px; max-width: 740px;">
+        <p class="eyebrow muted">Секретное слово</p>
+        <p style="font-family:'Unbounded'; font-weight: 800; font-size: 40px; letter-spacing: -.02em; margin-top: 8px;">АЭРОПОРТ</p>
+        <div class="chips" style="margin-top: 18px;">
+          <span class="chip">багаж</span><span class="arrow">→</span>
+          <span class="chip">самолёт</span><span class="arrow">→</span>
+          <span class="chip">паспорт</span><span class="arrow">→</span>
+          <span class="chip">терминал</span>
+        </div>
+      </div>
+      <p style="margin-top: 22px; font-size: 18px; font-weight: 700; color: var(--red-300);">Само секретное слово произносить нельзя.</p>
+    </div>
+    <div class="phones" style="flex:none;">
+      <div class="phone"><img src="img/11-timer.jpg" alt="Экран раунда"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>04 · Раунд</span></div>
+</section>
+
+<!-- 5. ЗАДАЧА МИРНЫХ -->
+<section class="slide">
+  <div class="glow glow-ivory"></div>
+  <div class="row">
+    <div class="phones" style="flex:none;">
+      <div class="phone"><img src="img/07-card-civilian.jpg" alt="Карточка мирного"></div>
+    </div>
+    <div class="col" style="padding-left: 20px;">
+      <p class="eyebrow muted">Задача мирных</p>
+      <h2 style="margin-top: 16px; font-size: 52px;">Показать, что знаешь слово.</h2>
+      <h2 style="margin-top: 10px; font-size: 52px; color: var(--muted);">Но не выдать его шпиону.</h2>
+      <p class="lead" style="margin-top: 30px; max-width: 520px;">Слишком расплывчатая ассоциация — и свои начнут подозревать тебя. Слишком точная — и шпион поймёт слово. Вся игра в этом балансе.</p>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>05 · Мирные</span></div>
+</section>
+
+<!-- 6. ЗАДАЧА ШПИОНА -->
+<section class="slide">
+  <div class="glow glow-tr"></div>
+  <div class="row">
+    <div class="col">
+      <p class="eyebrow">Задача шпиона</p>
+      <div class="big-list" style="margin-top: 22px;">
+        <p>Слушать ассоциации.</p>
+        <p>Не выдать себя.</p>
+        <p>Называть правдоподобные слова.</p>
+        <p class="accent">Понять секретное слово.</p>
+      </div>
+      <p class="lead" style="margin-top: 34px; max-width: 540px;">Шпион видит только «Ты шпион». Всё остальное он должен вычислить по чужим словам и блефу.</p>
+    </div>
+    <div class="phones" style="flex:none;">
+      <div class="phone"><img src="img/08-card-spy.jpg" alt="Карточка шпиона"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>06 · Шпион</span></div>
+</section>
+
+<!-- 7. ПОДОЗРЕНИЕ -->
+<section class="slide">
+  <div class="glow glow-tl"></div>
+  <div class="row">
+    <div class="col">
+      <p class="eyebrow">Подозрение</p>
+      <h2 style="margin-top: 16px;">Кто-то кажется шпионом?</h2>
+      <div class="steps" style="margin-top: 30px;">
+        <div class="step"><span class="num">1</span><p>Остановите игру кнопкой «Подозреваем»</p></div>
+        <div class="step"><span class="num">2</span><p>Выберите подозреваемого</p></div>
+        <div class="step"><span class="num">3</span><p>Обсудите всей компанией</p></div>
+        <div class="step"><span class="num">4</span><p>Выгнать или продолжить игру</p></div>
+      </div>
+      <div class="card" style="margin-top: 30px; max-width: 600px; padding: 20px 24px;">
+        <p style="font-size: 17px; line-height: 1.5; color: var(--ivory);">Если игрока выгнали, приложение сообщает, <b>был ли он шпионом</b>. Секретное слово при этом не раскрывается, пока игра продолжается.</p>
+      </div>
+    </div>
+    <div class="phones" style="flex:none;">
+      <div class="phone sm"><img src="img/12-suspect.jpg" alt="Выбор подозреваемого"></div>
+      <div class="phone sm"><img src="img/15-verdict-spy.jpg" alt="Шпион найден"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>07 · Подозрение</span></div>
+</section>
+
+<!-- 8. РИСК ШПИОНА -->
+<section class="slide">
+  <div class="glow glow-tr"></div>
+  <div class="row">
+    <div class="col">
+      <p class="eyebrow">Риск шпиона</p>
+      <h2 style="margin-top: 16px; font-size: 56px;">«Я знаю слово».</h2>
+      <p class="lead" style="margin-top: 18px; max-width: 560px;">Шпион может заявить это в любой момент и назвать догадку вслух. Приложение слово не показывает — результат подтверждает игрок, который его знает.</p>
+      <div style="display:flex; gap: 14px; margin-top: 30px; max-width: 620px;">
+        <div class="card red" style="flex:1; padding: 22px 24px;">
+          <p class="eyebrow" style="color: rgba(255,255,255,.75);">Угадал</p>
+          <p style="font-family:'Unbounded'; font-weight:700; font-size: 22px; margin-top: 10px;">Шпионы победили</p>
+        </div>
+        <div class="card" style="flex:1; padding: 22px 24px;">
+          <p class="eyebrow muted">Ошибся</p>
+          <p style="font-family:'Unbounded'; font-weight:700; font-size: 22px; margin-top: 10px;">Раскрыт и выбывает</p>
+        </div>
+      </div>
+      <p style="margin-top: 22px; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 600px;">Если остались другие шпионы, игра продолжается, а слово по-прежнему не раскрывается.</p>
+    </div>
+    <div class="phones" style="flex:none;">
+      <div class="phone"><img src="img/13-guess.jpg" alt="Шпион называет слово"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>08 · Риск шпиона</span></div>
+</section>
+
+<!-- 9. КТО ПОБЕЖДАЕТ -->
+<section class="slide" style="padding: 0;">
+  <div style="display:flex; height: 100%;">
+    <div style="flex:1; background: var(--ivory); color: #0c0c10; padding: 84px 72px 84px 88px; position: relative;">
+      <p class="eyebrow" style="color: #8a161f;">Побеждают</p>
+      <h2 style="font-size: 72px; margin-top: 14px; text-transform: uppercase; letter-spacing: -.03em;">Мирные</h2>
+      <div style="margin-top: 40px; border-top: 1px solid rgba(0,0,0,.14); padding-top: 24px;">
+        <p style="font-family:'Unbounded'; font-weight: 700; font-size: 24px; line-height: 1.25;">Все шпионы раскрыты</p>
+        <p style="margin-top: 12px; font-size: 17px; line-height: 1.5; color: #4a4a55; font-weight: 600;">Выгнаны голосованием или сами выдали себя неверной догадкой.</p>
+      </div>
+    </div>
+    <div style="width: 0; position: relative; z-index: 2;">
+      <div style="position:absolute; left:-44px; top: 316px; width: 88px; height: 88px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line);
+        display:flex; align-items:center; justify-content:center; font-family:'Unbounded'; font-weight: 800; font-size: 22px; color: var(--ivory);
+        box-shadow: 0 20px 50px rgba(0,0,0,.6);">VS</div>
+    </div>
+    <div style="flex:1; background: linear-gradient(180deg, #b9222d, #8a161f 55%, #2e0a0e); color: #fff; padding: 84px 88px 84px 72px; position: relative;">
+      <div class="glow" style="background: radial-gradient(60% 50% at 80% 0%, rgba(255,255,255,.14), transparent 70%);"></div>
+      <p class="eyebrow" style="color: rgba(255,255,255,.7); position: relative;">Побеждают</p>
+      <h2 style="font-size: 72px; margin-top: 14px; text-transform: uppercase; letter-spacing: -.03em; position: relative;">Шпионы</h2>
+      <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,.22); padding-top: 24px; position: relative;">
+        <p style="font-family:'Unbounded'; font-weight: 700; font-size: 24px; line-height: 1.25;">Хотя бы один шпион назвал слово</p>
+        <p style="font-family:'Unbounded'; font-weight: 500; font-size: 14px; margin: 14px 0; color: rgba(255,255,255,.6); letter-spacing: .2em;">ИЛИ</p>
+        <p style="font-family:'Unbounded'; font-weight: 700; font-size: 24px; line-height: 1.25;">Время вышло, а нераскрытый шпион остался</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot" style="color: rgba(0,0,0,.4);"><span class="dot"></span><span>09 · Кто побеждает</span></div>
+</section>
+
+<!-- 10. ВОЗМОЖНОСТИ -->
+<section class="slide" style="padding-top: 58px;">
+  <div class="glow glow-tr"></div>
+  <div style="position: relative;">
+    <p class="eyebrow">Возможности</p>
+    <h2 style="margin-top: 12px; font-size: 40px;">Всё, что нужно для вечера, уже внутри</h2>
+    <div class="grid4" style="margin-top: 28px;">
+      <div class="feat"><p class="v">3–20</p><p class="t">игроков в одной партии</p></div>
+      <div class="feat"><p class="v red">1–9</p><p class="t">шпионов — всегда меньше половины стола</p></div>
+      <div class="feat"><p class="v">19</p><p class="t">категорий и почти 1700 слов: места, еда, кино, музыка и другие</p></div>
+      <div class="feat"><p class="v">3·5·7·10</p><p class="t">минут на раунд или режим без таймера</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Приватно</p><p class="t">роль открывается только удержанием карточки</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Случайно</p><p class="t">первым всегда начинает кто-то из мирных</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Изгнание</p><p class="t">подозрение, голосование и вердикт без раскрытия слова</p></div>
+      <div class="feat"><p class="v red" style="font-size:20px;">Догадка</p><p class="t">шпион может рискнуть и назвать слово</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Ещё раунд</p><p class="t">те же игроки, новое слово и новый шпион одним нажатием</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Без повторов</p><p class="t">история последних 80 слов, они не выпадают снова</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Память</p><p class="t">имена, состав и настройки сохраняются на телефоне</p></div>
+      <div class="feat"><p class="v" style="font-size:20px;">Пауза</p><p class="t">таймер сам останавливается на время обсуждения</p></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>10 · Возможности</span></div>
+</section>
+
+<!-- 11. АТМОСФЕРА -->
+<section class="slide">
+  <div class="glow glow-b"></div>
+  <div class="vignette"></div>
+  <div class="row" style="justify-content: space-between;">
+    <div class="col" style="flex: 0 0 380px;">
+      <p class="eyebrow">Атмосфера</p>
+      <h2 style="margin-top: 16px; font-size: 60px; line-height: 1;">Никому<br>не доверяй.</h2>
+      <p class="lead" style="margin-top: 24px;">Красный таймер, закрытые карточки и финал, который переворачивает вечер.</p>
+    </div>
+    <div class="phones" style="flex:none; align-items: center;">
+      <div class="phone sm" style="transform: translateY(26px) rotate(-4deg);"><img src="img/14-timer-tense.jpg" alt="Последние секунды"></div>
+      <div class="phone" style="z-index: 2;"><img src="img/20-results-spies-revealed.jpg" alt="Шпионы победили"></div>
+      <div class="phone sm" style="transform: translateY(26px) rotate(4deg);"><img src="img/18-results-civilians-revealed.jpg" alt="Мирные победили"></div>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>11 · Атмосфера</span></div>
+</section>
+
+<!-- 12. ФИНАЛ -->
+<section class="slide">
+  <div class="glow glow-c"></div>
+  <div class="vignette"></div>
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+    <h1 style="font-size: 180px; text-shadow: 0 30px 80px rgba(0,0,0,.7);">Шпион</h1>
+    <div style="margin-top: 34px; display:flex; gap: 22px; align-items: center; font-family:'Unbounded'; font-weight: 500; font-size: 24px; color: var(--ivory-dim);">
+      <span>Один телефон.</span><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;"></span>
+      <span>Одна компания.</span><span style="width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;"></span>
+      <span class="accent">Никому не доверяй.</span>
+    </div>
+  </div>
+  <div class="foot"><span class="dot"></span><span>12 · Финал</span></div>
+</section>
+
+</body>
+</html>

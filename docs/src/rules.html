@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>ШПИОН — правила игры</title>
+<style>
+  @font-face { font-family: "Unbounded"; font-weight: 200 900; font-display: block;
+    src: url("../../public/fonts/unbounded-cyrillic.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Unbounded"; font-weight: 200 900; font-display: block;
+    src: url("../../public/fonts/unbounded-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Manrope"; font-weight: 200 800; font-display: block;
+    src: url("../../public/fonts/manrope-cyrillic.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Manrope"; font-weight: 200 800; font-display: block;
+    src: url("../../public/fonts/manrope-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+  :root {
+    --bg: #08080a; --surface: #111116; --surface-2: #16161d; --line: rgba(255,255,255,.08);
+    --ivory: #f5efe4; --ivory-dim: #cfc6b6; --muted: #9c9cab; --muted-2: #6c6c7b;
+    --red: #e6323f; --red-300: #ff7a84; --red-400: #ff4b58;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #000; }
+  body { font-family: "Manrope", system-ui, sans-serif; color: var(--ivory); -webkit-font-smoothing: antialiased; }
+
+  .page { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: var(--bg);
+    padding: 16mm 16mm 18mm; break-after: page; page-break-after: always; }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+  .glow { position:absolute; inset:0; pointer-events:none; }
+  .glow-c { background: radial-gradient(60% 40% at 50% 0%, rgba(230,50,63,.22), transparent 70%); }
+  .glow-tr { background: radial-gradient(50% 35% at 90% 0%, rgba(230,50,63,.16), transparent 70%); }
+  .content { position: relative; }
+  .foot { position:absolute; left: 16mm; right: 16mm; bottom: 9mm; display:flex; justify-content: space-between;
+    font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted-2); font-weight: 700; }
+
+  h1, h2, h3 { font-family: "Unbounded", sans-serif; margin: 0; }
+  h1 { font-size: 64px; font-weight: 800; letter-spacing: -.03em; line-height: .95; text-transform: uppercase; }
+  h2 { font-size: 17px; font-weight: 700; line-height: 1.2; display:flex; align-items:center; gap: 10px; }
+  h2 .n { width: 26px; height: 26px; border-radius: 50%; display:flex; align-items:center; justify-content:center; flex:none;
+    background: rgba(230,50,63,.14); border: 1px solid rgba(230,50,63,.32); color: var(--red-300); font-size: 11px; }
+  p { margin: 0; }
+  .eyebrow { font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--red-300); font-weight: 800; }
+  .sec { margin-top: 20px; }
+  .sec p, .sec li { font-size: 12.5px; line-height: 1.55; color: var(--ivory-dim); font-weight: 500; }
+  .sec p + p { margin-top: 6px; }
+  .sec b { color: var(--ivory); font-weight: 700; }
+  .sec ul { margin: 8px 0 0; padding-left: 18px; }
+  .sec li + li { margin-top: 4px; }
+  .body-top { margin-top: 10px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .card.red { background: linear-gradient(180deg, #b9222d, #8a161f 60%, #2e0a0e); border-color: rgba(255,75,88,.4); color:#fff; }
+  .card.red p { color: rgba(255,255,255,.85); }
+  .card.red b { color: #fff; }
+  .card.ivory { background: var(--ivory); border-color: transparent; color: #0c0c10; }
+  .card.ivory p { color: #3c3c46; }
+  .card.ivory b { color: #0c0c10; }
+  .card h3 { font-size: 14px; }
+
+  .chips { display:flex; align-items:center; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2);
+    font-family: "Unbounded"; font-weight: 500; font-size: 12px; color: var(--ivory); }
+  .arrow { color: var(--muted-2); font-size: 13px; }
+
+  .important { margin-top: 20px; border: 1px solid rgba(230,50,63,.4); background: rgba(230,50,63,.07); border-radius: 18px; padding: 16px 18px; }
+  .important ul { margin: 8px 0 0; padding-left: 18px; }
+  .important li { font-size: 12.5px; line-height: 1.5; color: var(--ivory); font-weight: 600; }
+  .important li + li { margin-top: 5px; }
+
+  .dialog { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .line { display:flex; align-items:center; gap: 12px; padding: 9px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+  .line .who { width: 104px; flex:none; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+  .line .who.spy { color: var(--red-300); }
+  .line .word { font-family: "Unbounded"; font-weight: 500; font-size: 14px; color: var(--ivory); }
+  .line.note { background: transparent; border-style: dashed; }
+  .line.note .word { font-family: "Manrope"; font-weight: 600; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Страница 1 -->
+<section class="page">
+  <div class="glow glow-c"></div>
+  <div class="content">
+    <p class="eyebrow">Правила игры</p>
+    <h1 style="margin-top: 8px;">Шпион</h1>
+    <p style="margin-top: 10px; font-family:'Unbounded'; font-weight: 500; font-size: 15px; color: var(--ivory-dim);">Найди шпиона. <span style="color: var(--red-400);">Или стань им.</span></p>
+    <p style="margin-top: 10px; font-size: 13px; line-height: 1.55; color: var(--muted); max-width: 150mm;">Игра для компании от 3 до 20 человек на одном телефоне. Все, кроме шпионов, знают секретное слово. Шпионы делают вид, что тоже знают.</p>
+
+    <div class="two" style="margin-top: 8px;">
+      <div>
+        <div class="sec">
+          <h2><span class="n">1</span>Подготовка</h2>
+          <p class="body-top">Откройте игру и нажмите <b>«Настроить игру»</b>. Выберите количество игроков, число шпионов, время раунда (3, 5, 7, 10 минут или без таймера) и категории слов. Имена можно ввести, чтобы на экранах были не «Игрок 1», а ваши друзья.</p>
+          <p>Для следующих вечеров хватит кнопки <b>«Быстрая игра»</b>: она берёт последние настройки.</p>
+        </div>
+        <div class="sec">
+          <h2><span class="n">2</span>Раздача ролей</h2>
+          <p class="body-top">Телефон идёт по кругу. Каждый игрок видит своё имя, убеждается, что никто не смотрит, и <b>удерживает карточку</b>, пока она не откроется.</p>
+          <p>Мирный видит категорию и секретное слово. Шпион видит только «Ты шпион». Посмотрел — нажми <b>«Скрыть карточку»</b> и передай телефон следующему.</p>
+        </div>
+      </div>
+      <div>
+        <div class="sec">
+          <h2><span class="n">3</span>Ассоциации</h2>
+          <p class="body-top">Когда все посмотрели роли, приложение называет, кто начинает, и запускает таймер.</p>
+          <p>Игроки по очереди говорят <b>одно слово-ассоциацию</b> к секретному слову. Само слово произносить нельзя.</p>
+          <div class="card" style="margin-top: 10px;">
+            <p class="eyebrow" style="color: var(--muted);">Пример · секретное слово</p>
+            <p style="font-family:'Unbounded'; font-weight: 800; font-size: 22px; margin-top: 4px; color: var(--ivory);">АЭРОПОРТ</p>
+            <div class="chips">
+              <span class="chip">багаж</span><span class="arrow">→</span>
+              <span class="chip">самолёт</span><span class="arrow">→</span>
+              <span class="chip">паспорт</span><span class="arrow">→</span>
+              <span class="chip">терминал</span>
+            </div>
+          </div>
+          <p style="margin-top: 10px;"><b>Мирные</b> показывают, что знают слово, но не делают подсказку слишком очевидной. <b>Шпион</b> слушает, называет правдоподобные слова и пытается понять секрет.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" style="margin-top: 26px;">
+      <p class="eyebrow">Кто есть кто</p>
+      <div class="two" style="margin-top: 10px; gap: 10px;">
+        <div class="card ivory">
+          <h3>Мирные</h3>
+          <p style="margin-top: 6px;">Знают секретное слово и категорию. Задача — своими ассоциациями показать, что знаешь слово, и вычислить того, кто блефует.</p>
+        </div>
+        <div class="card red">
+          <h3>Шпионы</h3>
+          <p style="margin-top: 6px;">Видят только «Ты шпион». Задача — не выдать себя, называть правдоподобные слова и понять секретное слово раньше, чем вас найдут.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 10px; display:flex; gap: 18px; align-items: center;">
+        <div style="flex:1;"><p class="eyebrow" style="color: var(--muted);">Игроков</p><p style="font-family:'Unbounded'; font-weight:700; font-size: 20px; color: var(--ivory); margin-top: 4px;">3–20</p></div>
+        <div style="flex:1;"><p class="eyebrow" style="color: var(--muted);">Шпионов</p><p style="font-family:'Unbounded'; font-weight:700; font-size: 20px; color: var(--red-400); margin-top: 4px;">1–9</p></div>
+        <div style="flex:1;"><p class="eyebrow" style="color: var(--muted);">Раунд</p><p style="font-family:'Unbounded'; font-weight:700; font-size: 20px; color: var(--ivory); margin-top: 4px;">3–10 мин</p></div>
+        <div style="flex:1.4;"><p class="eyebrow" style="color: var(--muted);">Категорий</p><p style="font-family:'Unbounded'; font-weight:700; font-size: 20px; color: var(--ivory); margin-top: 4px;">19 · 1689 слов</p></div>
+      </div>
+      <p style="margin-top: 10px; font-size: 11.5px; color: var(--muted);">Шпионов всегда меньше половины стола: при 3–4 игроках один, при 5–6 до двух, при 20 до девяти. Раунд можно вести и без таймера.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Шпион · правила игры</span><span>1 / 3</span></div>
+</section>
+
+<!-- Страница 2 -->
+<section class="page">
+  <div class="glow glow-tr"></div>
+  <div class="content">
+    <div class="two">
+      <div>
+        <div class="sec" style="margin-top: 0;">
+          <h2><span class="n">4</span>Как подозревать игрока</h2>
+          <p class="body-top">Если чьи-то ассоциации кажутся странными, любой может остановить игру кнопкой <b>«Подозреваем»</b>. Таймер встаёт на паузу.</p>
+          <p>Выберите подозреваемого. Он может коротко оправдаться, а компания решает: <b>«Выгнать»</b> или <b>«Продолжить игру»</b>.</p>
+        </div>
+        <div class="sec">
+          <h2><span class="n">5</span>Как выгнать игрока</h2>
+          <p class="body-top">После изгнания приложение показывает, был ли он шпионом.</p>
+          <ul>
+            <li><b>«Это был не шпион»</b> — мирный выбывает, игра продолжается.</li>
+            <li><b>«Шпион найден»</b> — шпион выбывает. Если шпионы ещё остались, игра продолжается.</li>
+            <li>Секретное слово <b>не показывается</b>, пока раунд не закончен.</li>
+          </ul>
+        </div>
+        <div class="sec">
+          <h2><span class="n">6</span>Как шпион может назвать слово</h2>
+          <p class="body-top">Шпион в любой момент может заявить, что знает слово. Нажмите <b>«Назвать слово»</b>, выберите этого игрока, и пусть он скажет догадку вслух.</p>
+          <p>Игрок, который знает слово, подтверждает: <b>«Угадал»</b> или <b>«Не угадал»</b>. Приложение слово не показывает.</p>
+          <ul>
+            <li>Угадал — <b>шпионы победили</b>, раунд окончен.</li>
+            <li>Не угадал — этот шпион <b>раскрыт и выбывает</b>. Если есть другие шпионы, игра продолжается, слово остаётся в тайне.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="sec" style="margin-top: 0;">
+          <h2><span class="n">7</span>Условия победы</h2>
+          <div class="card ivory" style="margin-top: 10px;">
+            <h3>Мирные победили</h3>
+            <p style="margin-top: 6px;">Все шпионы раскрыты: выгнаны голосованием или сами выдали себя неверной догадкой.</p>
+          </div>
+          <div class="card red" style="margin-top: 8px;">
+            <h3>Шпионы победили</h3>
+            <p style="margin-top: 6px;">Хотя бы один шпион правильно назвал слово, <b>или</b> время вышло, а нераскрытый шпион остался.</p>
+          </div>
+          <p style="margin-top: 10px;">В режиме без таймера раунд идёт, пока не найдены все шпионы, шпион не угадал слово или компания не нажала <b>«Завершить»</b>. При ручном завершении с нераскрытым шпионом побеждают шпионы.</p>
+          <p style="margin-top: 6px;">На финальном экране приложение показывает победителя, а по кнопке — секретное слово, категорию и всех шпионов.</p>
+        </div>
+        <div class="important">
+          <p class="eyebrow">Важно</p>
+          <ul>
+            <li>Каждый по очереди говорит одно слово-ассоциацию.</li>
+            <li>Секретное слово произносить нельзя.</li>
+            <li>Игра не строится на вопросах: только ассоциации по кругу.</li>
+            <li>Найденный шпион не должен раскрывать секретное слово.</li>
+            <li>Если шпионов несколько, игра продолжается до обнаружения всех.</li>
+            <li>Неправильная догадка раскрывает именно этого шпиона.</li>
+            <li>Правильная догадка даёт победу шпионам.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Шпион · правила игры</span><span>2 / 3</span></div>
+</section>
+
+<!-- Страница 3 -->
+<section class="page">
+  <div class="glow glow-c"></div>
+  <div class="content">
+    <div class="sec" style="margin-top: 0;">
+      <h2><span class="n">8</span>Короткий пример партии</h2>
+      <p class="body-top">Пять игроков, один шпион. Мирные видят на карточке слово <b>«КОФЕ»</b>, категория «Еда». Шпион видит только «Ты шпион». Приложение выбрало первым Марата.</p>
+      <div class="dialog">
+        <div class="line"><span class="who">Марат</span><span class="word">утро</span></div>
+        <div class="line"><span class="who">Алина</span><span class="word">чашка</span></div>
+        <div class="line"><span class="who spy">Дана · шпион</span><span class="word">горячий</span></div>
+        <div class="line"><span class="who">Тимур</span><span class="word">зерно</span></div>
+        <div class="line"><span class="who">Камила</span><span class="word">аромат</span></div>
+        <div class="line note"><span class="who"></span><span class="word">Второй круг. Дана слышала «чашка», «зерно», «аромат» и думает, что это чай или кофе.</span></div>
+        <div class="line"><span class="who">Марат</span><span class="word">бариста</span></div>
+        <div class="line"><span class="who">Алина</span><span class="word">капучино</span></div>
+        <div class="line"><span class="who spy">Дана · шпион</span><span class="word">сахар</span></div>
+        <div class="line note"><span class="who"></span><span class="word">«Горячий» и «сахар» подходят к чему угодно. Тимур нажимает «Подозреваем» и выбирает Дану.</span></div>
+      </div>
+      <div class="two" style="margin-top: 14px;">
+        <div class="card">
+          <p class="eyebrow" style="color: var(--muted);">Вариант А</p>
+          <p style="margin-top: 6px;">Компания выгоняет Дану. Приложение показывает <b>«Шпион найден»</b>. Других шпионов нет, поэтому <b>мирные побеждают</b>, и только теперь на экране появляется слово «КОФЕ».</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow" style="color: var(--muted);">Вариант Б</p>
+          <p style="margin-top: 6px;">Дана рискует первой: нажимает «Назвать слово» и говорит «кофе». Алина подтверждает <b>«Угадал»</b>, и <b>шпионы побеждают</b>. Скажи Дана «чай», она бы выбыла.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 12px; border-color: rgba(230,50,63,.35);">
+        <p><b>Совет.</b> Хорошая ассоциация понятна тем, кто знает слово, и бесполезна тому, кто не знает. «Чашка» лучше, чем «эспрессо», и честнее, чем «вещь».</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Шпион · правила игры</span><span>3 / 3</span></div>
+</section>
+
+</body>
+</html>

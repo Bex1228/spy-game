@@ -11,10 +11,18 @@ import { videogames } from "./categories/videogames";
 import { transport } from "./categories/transport";
 import { objects } from "./categories/objects";
 import { characters } from "./categories/characters";
+import { holidays } from "./categories/holidays";
+import { nature } from "./categories/nature";
+import { music } from "./categories/music";
+import { clothes } from "./categories/clothes";
+import { hobbies } from "./categories/hobbies";
+import { school } from "./categories/school";
+import { brands } from "./categories/brands";
 
 /**
  * Встроенные категории. Порядок — порядок отображения в настройках.
  * Чтобы добавить новую категорию, создайте файл в ./categories и добавьте её сюда.
+ * Правило словаря: одно слово живёт ровно в одной категории (проверка: npm run check:words).
  */
 export const BUILTIN_CATEGORIES: readonly Category[] = [
   places,
@@ -29,6 +37,13 @@ export const BUILTIN_CATEGORIES: readonly Category[] = [
   transport,
   objects,
   characters,
+  holidays,
+  nature,
+  music,
+  clothes,
+  hobbies,
+  school,
+  brands,
 ];
 
 const byId = new Map(BUILTIN_CATEGORIES.map((c) => [c.id, c]));

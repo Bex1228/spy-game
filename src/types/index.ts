@@ -19,7 +19,14 @@ export type CategoryIconName =
   | "gamepad"
   | "car"
   | "package"
-  | "crown";
+  | "crown"
+  | "party-popper"
+  | "cloud-sun"
+  | "music"
+  | "shirt"
+  | "palette"
+  | "graduation-cap"
+  | "store";
 
 export interface Category {
   id: string;
