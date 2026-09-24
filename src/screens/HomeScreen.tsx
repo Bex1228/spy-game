@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion";
 import { HelpCircle, Settings2, SlidersHorizontal, Zap } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import type { GameSettings } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { ScreenShell } from "@/components/ui/ScreenShell";
 import { Sheet } from "@/components/ui/Sheet";
-import { Logo } from "@/components/game/Logo";
 import { RulesContent } from "@/components/game/RulesContent";
 import { SettingsSheet } from "@/components/game/SettingsSheet";
 import { pluralize } from "@/utils/format";
@@ -64,7 +64,17 @@ export function HomeScreen({ settings, onQuickPlay, onSetup }: HomeScreenProps) 
 
       <div className="relative flex flex-1 flex-col items-center justify-center pb-10 text-center">
         <motion.div custom={0} variants={stagger} initial="hidden" animate="show">
-          <Logo size={84} />
+          <Image
+            src="/spy-logo.png"
+            alt=""
+            width={256}
+            height={253}
+            priority
+            sizes="(min-width: 640px) 140px, 124px"
+            className="h-31 w-auto select-none sm:h-35"
+            style={{ filter: "drop-shadow(0 14px 32px rgb(230 50 63 / 0.35))" }}
+            draggable={false}
+          />
         </motion.div>
 
         <motion.h1
@@ -72,7 +82,7 @@ export function HomeScreen({ settings, onQuickPlay, onSetup }: HomeScreenProps) 
           variants={stagger}
           initial="hidden"
           animate="show"
-          className="mt-7 font-display text-[64px] font-extrabold uppercase leading-none tracking-[-0.02em] text-ivory"
+          className="mt-4 font-display text-[64px] font-extrabold uppercase leading-none tracking-[-0.02em] text-ivory"
           style={{ textShadow: "0 20px 60px rgb(0 0 0 / 0.6)" }}
         >
           Шпион
