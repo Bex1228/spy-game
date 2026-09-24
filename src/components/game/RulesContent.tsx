@@ -1,34 +1,24 @@
-const steps: { title: string; text: string }[] = [
-  {
-    title: "Роли",
-    text: "Все игроки получают одно секретное слово из категории. Шпион слова не знает — он видит только «Ты шпион».",
-  },
-  {
-    title: "Раздача",
-    text: "Телефон передаётся по кругу. Каждый приватно открывает свою карточку, запоминает и скрывает её.",
-  },
-  {
-    title: "Раунд",
-    text: "Игроки по очереди задают друг другу вопросы о слове. Отвечайте так, чтобы свои поняли, а шпион — нет.",
-  },
-  {
-    title: "Развязка",
-    text: "Когда время вышло, голосуйте, кто шпион. Если шпиона нашли — он может назвать слово и выиграть.",
-  },
+const steps: string[] = [
+  "Все, кроме шпионов, получают одно секретное слово.",
+  "По очереди называйте ассоциации, не произнося само слово.",
+  "Шпионы пытаются притвориться своими и понять слово.",
+  "Если подозреваете игрока — остановите игру и решите всей компанией, выгнать ли его.",
+  "Найденный шпион не раскрывает секретное слово, если остались другие шпионы.",
+  "Шпион может рискнуть и назвать секретное слово.",
+  "Если угадал — шпионы победили. Если ошибся — он раскрыт.",
+  "Мирные выигрывают, когда найдены все шпионы.",
+  "Если время закончилось, а шпион остался — выигрывают шпионы.",
 ];
 
 export function RulesContent() {
   return (
-    <ol className="flex flex-col gap-3">
-      {steps.map((s, i) => (
-        <li key={s.title} className="flex gap-3 rounded-2xl border border-white/6 bg-ink-850 p-4">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-500/15 font-display text-xs font-bold text-accent-300">
+    <ol className="flex flex-col gap-2">
+      {steps.map((text, i) => (
+        <li key={text} className="flex items-start gap-3 rounded-2xl border border-white/6 bg-ink-850 px-4 py-3">
+          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-500/15 font-display text-xs font-bold text-accent-300">
             {i + 1}
           </span>
-          <div>
-            <div className="text-[15px] font-bold text-ink-100">{s.title}</div>
-            <p className="mt-1 text-sm leading-relaxed text-ink-300">{s.text}</p>
-          </div>
+          <p className="text-[15px] leading-relaxed text-ink-200">{text}</p>
         </li>
       ))}
     </ol>

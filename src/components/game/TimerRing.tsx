@@ -9,13 +9,14 @@ interface TimerRingProps {
   fraction: number;
   tense?: boolean;
   paused?: boolean;
+  size?: "md" | "sm";
   children: ReactNode;
 }
 
-export function TimerRing({ fraction, tense = false, paused = false, children }: TimerRingProps) {
+export function TimerRing({ fraction, tense = false, paused = false, size = "md", children }: TimerRingProps) {
   const clamped = Math.max(0, Math.min(1, fraction));
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[300px]">
+    <div className={cn("relative mx-auto aspect-square w-full", size === "md" ? "max-w-[300px]" : "max-w-[240px]")}>
       <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden>
         <defs>
           <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">

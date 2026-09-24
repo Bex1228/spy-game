@@ -53,8 +53,15 @@ export interface Player {
   name: string;
 }
 
+export type PlayerStatus = "active" | "eliminated";
+
+/** Почему игрок выбыл: выгнан голосованием или (для шпиона) неправильно назвал слово. */
+export type EliminationReason = "voted" | "wrongGuess";
+
 export interface RoundPlayer extends Player {
   role: Role;
+  status: PlayerStatus;
+  eliminationReason?: EliminationReason;
 }
 
 export interface Round {
@@ -64,7 +71,28 @@ export interface Round {
   word: string;
   players: RoundPlayer[];
   spyIds: number[];
+  /** Сколько шпионов было в начале раунда. */
+  spyCount: number;
   /** id игрока-нешпиона, который начинает раунд. */
   starterId: number;
   roundMinutes: RoundMinutes;
+}
+
+export type Winner = "civilians" | "spies";
+
+export type RoundEndReason =
+  /** Все шпионы найдены или раскрыли себя. */
+  | "allSpiesOut"
+  /** Шпион правильно назвал слово. */
+  | "spyGuessed"
+  /** Время вышло, шпион остался. */
+  | "timeUp"
+  /** Раунд завершён вручную, шпион остался. */
+  | "manualEnd";
+
+export interface RoundOutcome {
+  winner: Winner;
+  reason: RoundEndReason;
+  /** Игрок, определивший исход (например, угадавший шпион). */
+  playerId?: number;
 }

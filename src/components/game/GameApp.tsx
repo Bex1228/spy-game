@@ -49,11 +49,12 @@ export function GameApp() {
         ) : state.phase === "roundStart" ? (
           <RoundStartScreen key="roundStart" round={state.round} onBegin={() => dispatch({ type: "BEGIN_ROUND" })} />
         ) : state.phase === "playing" ? (
-          <TimerScreen key="playing" round={state.round} onEnd={() => dispatch({ type: "END_ROUND" })} />
+          <TimerScreen key="playing" round={state.round} overlay={state.overlay} dispatch={dispatch} />
         ) : (
           <ResultsScreen
             key="results"
             round={state.round}
+            outcome={state.outcome}
             revealed={state.revealed}
             onReveal={() => dispatch({ type: "REVEAL_RESULTS" })}
             onNewRound={() => startRound(settingsForQuickPlay(settings))}

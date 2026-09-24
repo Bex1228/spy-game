@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircleQuestion, Play, Timer, TimerOff } from "lucide-react";
+import { MessageSquareText, Play, Timer, TimerOff } from "lucide-react";
 import type { Round } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { ScreenShell } from "@/components/ui/ScreenShell";
@@ -36,7 +36,7 @@ export function RoundStartScreen({ round, onBegin }: RoundStartScreenProps) {
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
           className="flex h-20 w-20 items-center justify-center rounded-full border border-white/8 bg-ink-850 text-ivory shadow-float"
         >
-          <MessageCircleQuestion size={36} strokeWidth={1.7} />
+          <MessageSquareText size={36} strokeWidth={1.7} />
         </motion.div>
 
         <motion.p
@@ -45,7 +45,7 @@ export function RoundStartScreen({ round, onBegin }: RoundStartScreenProps) {
           transition={{ delay: 0.15 }}
           className="mt-8 text-[11px] font-bold uppercase tracking-[0.22em] text-ink-400"
         >
-          Первым задаёт вопрос
+          Первым называет ассоциацию
         </motion.p>
 
         <motion.h1
@@ -64,7 +64,8 @@ export function RoundStartScreen({ round, onBegin }: RoundStartScreenProps) {
           transition={{ delay: 0.4 }}
           className="mt-6 max-w-[280px] text-[15px] leading-relaxed text-ink-300"
         >
-          Задай вопрос любому игроку. Тот, кто ответил, спрашивает следующим.
+          Назови слово или короткую ассоциацию, связанную с секретным словом. Дальше — по кругу. Само слово произносить
+          нельзя.
         </motion.p>
 
         <motion.div

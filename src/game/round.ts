@@ -57,6 +57,7 @@ export function createRound({ settings, recentWords = [], rng = defaultRng }: Cr
   const players: RoundPlayer[] = basePlayers.map((p) => ({
     ...p,
     role: spySet.has(p.id) ? "spy" : "civilian",
+    status: "active",
   }));
 
   const civilians = players.filter((p) => p.role === "civilian");
@@ -69,6 +70,7 @@ export function createRound({ settings, recentWords = [], rng = defaultRng }: Cr
     word,
     players,
     spyIds,
+    spyCount: spyIds.length,
     starterId,
     roundMinutes: settings.roundMinutes,
   };

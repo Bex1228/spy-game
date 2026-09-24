@@ -1,91 +1,63 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-
-export type TimerStatus = "running" | "paused" | "finished";
+import { useEffect, useRef, useState } from "react";
 
 interface TimerOptions {
   /** Длительность в мс; null — секундомер без ограничения. */
   durationMs: number | null;
+  /** Пока true — время не идёт (пауза пользователя, открытый оверлей и т.п.). */
+  paused: boolean;
   onFinish?: () => void;
-}
-
-interface TimerSnapshot {
-  status: TimerStatus;
-  elapsedMs: number;
 }
 
 const TICK_MS = 100;
 
 /**
- * Таймер на временных метках: точен даже если вкладка уходила в фон,
- * потому что считает не тики, а разницу Date.now().
+ * Декларативный таймер на временных метках: точен даже если вкладка уходила в фон,
+ * потому что считает не тики, а разницу Date.now(). Пауза управляется пропсом.
  */
-export function useTimer({ durationMs, onFinish }: TimerOptions) {
-  const startRef = useRef<number | null>(null);
-  const accumulatedRef = useRef<number>(0);
-  const [snapshot, setSnapshot] = useState<TimerSnapshot>({ status: "running", elapsedMs: 0 });
+export function useTimer({ durationMs, paused, onFinish }: TimerOptions) {
+  const accumulatedRef = useRef(0);
+  const finishedRef = useRef(false);
   const onFinishRef = useRef(onFinish);
+  const [elapsedMs, setElapsedMs] = useState(0);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
     onFinishRef.current = onFinish;
   }, [onFinish]);
 
-  const compute = useCallback(
-    (status: TimerStatus): TimerSnapshot => {
-      const live = status === "running" && startRef.current !== null ? Date.now() - startRef.current : 0;
-      const elapsed = accumulatedRef.current + live;
-      if (durationMs !== null && elapsed >= durationMs) {
-        return { status: "finished", elapsedMs: durationMs };
-      }
-      return { status, elapsedMs: elapsed };
-    },
-    [durationMs],
-  );
-
   useEffect(() => {
-    if (snapshot.status !== "running") return;
-    if (startRef.current === null) startRef.current = Date.now();
-    const id = window.setInterval(() => {
-      setSnapshot((prev) => {
-        if (prev.status !== "running") return prev;
-        const next = compute("running");
-        if (next.status === "finished") {
-          accumulatedRef.current = next.elapsedMs;
-          queueMicrotask(() => onFinishRef.current?.());
-        }
-        return next;
-      });
-    }, TICK_MS);
-    return () => window.clearInterval(id);
-  }, [snapshot.status, compute]);
+    if (paused || finishedRef.current) return;
 
-  const pause = useCallback(() => {
-    setSnapshot((prev) => {
-      if (prev.status !== "running") return prev;
-      if (startRef.current !== null) accumulatedRef.current += Date.now() - startRef.current;
-      return { status: "paused", elapsedMs: accumulatedRef.current };
-    });
-  }, []);
+    const startedAt = Date.now();
+    let stopped = false;
 
-  const resume = useCallback(() => {
-    setSnapshot((prev) => {
-      if (prev.status !== "paused") return prev;
-      startRef.current = Date.now();
-      return { status: "running", elapsedMs: accumulatedRef.current };
-    });
-  }, []);
+    const tick = () => {
+      const elapsed = accumulatedRef.current + (Date.now() - startedAt);
+      if (durationMs !== null && elapsed >= durationMs) {
+        stopped = true;
+        finishedRef.current = true;
+        accumulatedRef.current = durationMs;
+        window.clearInterval(id);
+        setElapsedMs(durationMs);
+        setFinished(true);
+        onFinishRef.current?.();
+        return;
+      }
+      setElapsedMs(elapsed);
+    };
 
-  const remainingMs = durationMs === null ? null : Math.max(0, durationMs - snapshot.elapsedMs);
-  const progress = durationMs === null ? 0 : Math.min(1, snapshot.elapsedMs / durationMs);
+    const id = window.setInterval(tick, TICK_MS);
 
-  return {
-    status: snapshot.status,
-    elapsedMs: snapshot.elapsedMs,
-    remainingMs,
-    /** Доля прошедшего времени 0..1 (для секундомера всегда 0). */
-    progress,
-    pause,
-    resume,
-  };
+    return () => {
+      window.clearInterval(id);
+      if (!stopped) accumulatedRef.current += Date.now() - startedAt;
+    };
+  }, [paused, durationMs]);
+
+  const remainingMs = durationMs === null ? null : Math.max(0, durationMs - elapsedMs);
+  const progress = durationMs === null ? 0 : Math.min(1, elapsedMs / durationMs);
+
+  return { elapsedMs, remainingMs, progress, finished };
 }

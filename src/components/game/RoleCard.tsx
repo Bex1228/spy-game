@@ -149,6 +149,7 @@ function CivilianFace({ word, category }: { word: string; category: string }) {
       <motion.div {...contentEnter} transition={{ delay: 0.32, duration: 0.35 }} className="relative w-full">
         <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-ink-400">Секретное слово</div>
         <div
+          data-testid="secret-word"
           className={cn(
             "mt-3 font-display font-bold uppercase text-ivory text-balance break-words",
             wordSizeClass(word),
@@ -160,7 +161,7 @@ function CivilianFace({ word, category }: { word: string; category: string }) {
       </motion.div>
 
       <motion.div {...contentEnter} transition={{ delay: 0.42, duration: 0.3 }} className="relative text-xs text-ink-400">
-        Запомни слово и не показывай его
+        Запомни слово и не произноси его вслух
       </motion.div>
     </div>
   );
@@ -194,7 +195,7 @@ function SpyFace() {
       </motion.div>
 
       <motion.div {...contentEnter} transition={{ delay: 0.42, duration: 0.3 }} className="relative text-xs text-white/70">
-        Слушай вопросы и угадай слово
+        Слушай ассоциации и угадай слово
       </motion.div>
     </div>
   );

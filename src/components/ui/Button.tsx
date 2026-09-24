@@ -53,7 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {leadingIcon ? <span className="-ml-1 flex shrink-0 items-center">{leadingIcon}</span> : null}
-      <span>{children}</span>
+      <span className="whitespace-nowrap">{children}</span>
     </motion.button>
   );
 });
